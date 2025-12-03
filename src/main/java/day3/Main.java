@@ -3,14 +3,17 @@ package day3;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+    private static final int DIGITS = 12;
+
     public static void main(String[] args) {
         File myObj = new File("src/main/resources/day3.txt");
         List<String> bank = new ArrayList<>();
-        int totalJoltage = 0;
+        long totalJoltage = 0;
 
         try {
             Scanner scanner = new Scanner(myObj);
@@ -22,7 +25,11 @@ public class Main {
         }
 
         for (String currentBank : bank) {
-            int maxJoltageCurrentBank = getMaxJoltageCurrentBank(currentBank);
+//            PART ONE
+//            long maxJoltageCurrentBank = getMaxJoltageCurrentBankPartOne(currentBank);
+
+//            PART TWO
+            long maxJoltageCurrentBank = getMaxJoltageCurrentBankPartTwo(currentBank);
 
             totalJoltage += maxJoltageCurrentBank;
         }
@@ -30,21 +37,62 @@ public class Main {
         System.out.println("Total Joltage: " + totalJoltage);
     }
 
-    private static int getMaxJoltageCurrentBank(String currentBank) {
-        int maxJoltageCurrentBank = 0;
-        for (int i = 0; i < currentBank.length() - 1; i++) {
-            char a = currentBank.charAt(i);
+    /************
+     * PART ONE *
+     ************/
 
-            for (int j = i + 1; j < currentBank.length(); j++) {
-                char b = currentBank.charAt(j);
+//    private static int getMaxJoltageCurrentBankPartOne(String currentBank) {
+//        int maxJoltageCurrentBank = 0;
+//        for (int i = 0; i < currentBank.length() - 1; i++) {
+//            char a = currentBank.charAt(i);
+//
+//            for (int j = i + 1; j < currentBank.length(); j++) {
+//                char b = currentBank.charAt(j);
+//
+//                String number = String.valueOf(a) + b;
+//
+//                if (Integer.parseInt(number) > maxJoltageCurrentBank) {
+//                    maxJoltageCurrentBank = Integer.parseInt(number);
+//                }
+//            }
+//        }
+//        return maxJoltageCurrentBank;
+//    }
 
-                String number = String.valueOf(a) + b;
+    /************
+     * PART TWO *
+     ************/
 
-                if (Integer.parseInt(number) > maxJoltageCurrentBank) {
-                    maxJoltageCurrentBank = Integer.parseInt(number);
-                }
+    public static long getMaxJoltageCurrentBankPartTwo(String currentBank) {
+        String maxJoltageCurrentBank = "";
+        HashMap<String, Long> map = new HashMap<>();
+        map.put("Position", 0L);
+        map.put("Largest", 0L);
+
+        for (int i = 0; i < DIGITS; i++) {
+            map = findLargestNumberInSequence(currentBank, DIGITS - i - 1, map.get("Position"));
+            maxJoltageCurrentBank = maxJoltageCurrentBank.concat(String.valueOf(map.get("Largest")));
+        }
+
+        return Long.parseLong(maxJoltageCurrentBank);
+    }
+
+    public static HashMap<String, Long> findLargestNumberInSequence(String currentBank, int excludedCharacters, long position) {
+        HashMap<String, Long> map = new HashMap<>();
+        String availableSequence = currentBank.substring((int) position, currentBank.length() - excludedCharacters);
+        long largestNumber = 0;
+
+        for (int i = 0; i < availableSequence.length(); i++) {
+            int x = Character.getNumericValue(availableSequence.charAt(i));
+            if (x > largestNumber) {
+                largestNumber = x;
+                // set position (+1) of highest number to start the next sequence right after that point
+                map.put("Position", (long) (i + 1));
             }
         }
-        return maxJoltageCurrentBank;
+
+        map.put("Largest", largestNumber);
+
+        return map;
     }
 }
