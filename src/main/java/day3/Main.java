@@ -22,24 +22,29 @@ public class Main {
         }
 
         for (String currentBank : bank) {
-            int maxJoltageCurrentBank = 0;
-            for (int i = 0; i < currentBank.length() - 1; i++) {
-                char a = currentBank.charAt(i);
-
-                for (int j = i + 1; j < currentBank.length(); j++) {
-                    char b = currentBank.charAt(j);
-
-                    String number = String.valueOf(a) + b;
-
-                    if (Integer.parseInt(number) > maxJoltageCurrentBank) {
-                        maxJoltageCurrentBank = Integer.parseInt(number);
-                    }
-                }
-            }
+            int maxJoltageCurrentBank = getMaxJoltageCurrentBank(currentBank);
 
             totalJoltage += maxJoltageCurrentBank;
         }
 
         System.out.println("Total Joltage: " + totalJoltage);
+    }
+
+    private static int getMaxJoltageCurrentBank(String currentBank) {
+        int maxJoltageCurrentBank = 0;
+        for (int i = 0; i < currentBank.length() - 1; i++) {
+            char a = currentBank.charAt(i);
+
+            for (int j = i + 1; j < currentBank.length(); j++) {
+                char b = currentBank.charAt(j);
+
+                String number = String.valueOf(a) + b;
+
+                if (Integer.parseInt(number) > maxJoltageCurrentBank) {
+                    maxJoltageCurrentBank = Integer.parseInt(number);
+                }
+            }
+        }
+        return maxJoltageCurrentBank;
     }
 }
