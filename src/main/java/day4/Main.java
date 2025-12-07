@@ -10,22 +10,35 @@ import java.util.List;
 public class Main {
 
     private static final int[][] DIRS8 = {
-            {-1,  0}, {1, 0}, {0, -1}, {0, 1},
+            {-1, 0}, {1, 0}, {0, -1}, {0, 1},
             {-1, -1}, {-1, 1}, {1, -1}, {1, 1}
     };
 
     public static void main(String[] args) throws IOException {
         char[][] grid = readGrid("src/main/resources/day4.txt");
+        int accessibleRolls = 0;
 
         for (int r = 0; r < grid.length; r++) {
             for (int c = 0; c < grid[0].length; c++) {
+                // neighbors is a list of coordinates. Use the coordinates in the grid to find out which symbol they point to.
                 List<Point> neighbors = neighbors(new Point(r, c), grid);
 
-                // neighbors is a list of coordinates. Use the coordinates in the grid to find out which symbol they point to.
+                if (grid[r][c] == '@') {
+                    int neighboringAmountOfRolls = 0;
+                    for (Point pnt : neighbors) {
+                        if (grid[pnt.x][pnt.y] == '@') {
+                            neighboringAmountOfRolls++;
+                        }
+                    }
 
-                System.out.println(neighbors);
+                    if (neighboringAmountOfRolls < 4) {
+                        accessibleRolls++;
+                    }
+                }
             }
         }
+
+        System.out.println(accessibleRolls);
     }
 
     public static char[][] readGrid(String filename) throws IOException {
@@ -33,7 +46,7 @@ public class Main {
             List<String> lines = br.lines().toList();
 
             int rows = lines.size();
-            int cols =  lines.get(0).length();
+            int cols = lines.get(0).length();
 
             char[][] grid = new char[rows][cols];
 
