@@ -16,29 +16,38 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         char[][] grid = readGrid("src/main/resources/day4.txt");
-        int accessibleRolls = 0;
+        int accessibleRolls;
+        int totalAmountOfRemovableRolls = 0;
 
-        for (int r = 0; r < grid.length; r++) {
-            for (int c = 0; c < grid[0].length; c++) {
-                // neighbors is a list of coordinates. Use the coordinates in the grid to find out which symbol they point to.
-                List<Point> neighbors = neighbors(new Point(r, c), grid);
+        // Check whether rolls can be removed. Remove rolls and repeat process until no more rolls can be removed.
+        do {
+            accessibleRolls = 0;
+            for (int r = 0; r < grid.length; r++) {
+                for (int c = 0; c < grid[0].length; c++) {
+                    // neighbors is a list of coordinates. Use the coordinates in the grid to find out which symbol they point to.
+                    List<Point> neighbors = neighbors(new Point(r, c), grid);
 
-                if (grid[r][c] == '@') {
-                    int neighboringAmountOfRolls = 0;
-                    for (Point pnt : neighbors) {
-                        if (grid[pnt.x][pnt.y] == '@') {
-                            neighboringAmountOfRolls++;
+                    // If current position is a roll, find out how many 'roll' neighbors it has.
+                    if (grid[r][c] == '@') {
+                        int neighboringAmountOfRolls = 0;
+                        for (Point pnt : neighbors) {
+                            if (grid[pnt.x][pnt.y] == '@') {
+                                neighboringAmountOfRolls++;
+                            }
                         }
-                    }
 
-                    if (neighboringAmountOfRolls < 4) {
-                        accessibleRolls++;
+                        // If less than 4 'roll' neighbors, increase totals and remove roll from the grid.
+                        if (neighboringAmountOfRolls < 4) {
+                            accessibleRolls++;
+                            totalAmountOfRemovableRolls++;
+                            grid[r][c] = 'X';
+                        }
                     }
                 }
             }
-        }
+        } while (accessibleRolls != 0);
 
-        System.out.println(accessibleRolls);
+        System.out.println(totalAmountOfRemovableRolls);
     }
 
     public static char[][] readGrid(String filename) throws IOException {
