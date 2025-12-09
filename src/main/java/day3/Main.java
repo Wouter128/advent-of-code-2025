@@ -86,8 +86,9 @@ public class Main {
             int x = Character.getNumericValue(availableSequence.charAt(i));
             if (x > largestNumber) {
                 largestNumber = x;
-                // set position (+1) of highest number to start the next sequence right after that point
-                map.put("Position", (long) (i + 1));
+                // Set position (+1) of highest number to start the next sequence right after that point.
+                // Because the loop starts counting from 0 again, we also need to add the previous position.
+                map.put("Position", (long) (i + 1) + position);
             }
         }
 
