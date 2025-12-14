@@ -65,7 +65,7 @@ public class Main {
         long totalAmountFreshIngredients = 0;
 
         for (Range range : mergedRanges) {
-            long sum = (range.end() - range.start()) + 1;
+            long sum = range.end() - range.start() + 1;
             totalAmountFreshIngredients += sum;
         }
 
